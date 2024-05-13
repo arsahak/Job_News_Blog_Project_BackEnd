@@ -8,20 +8,30 @@ const {
   updateUser,
   loginUser,
   getAllProfile,
+} = require('../controllers/user.controller');
+
+const {
   getAllNews,
   createNews,
-} = require('../controllers/user.controller');
+  updateNews,
+  deleteNews,
+} = require('../controllers/news.controller');
 
 const checkUser = require('../middleware/checkUser');
 
-router.get('/', getAllUsers);
-router.get('/news', getAllNews);
+router.get('/', checkUser, getAllUsers);
+router.get('/news', checkUser, getAllNews);
 router.get('/profile', checkUser, getAllProfile);
 router.get('/:id', getOneUser);
 router.delete('/:id', deleteUser);
 router.patch('/:id', updateUser);
 router.post('/', createUser);
-router.post('/news', createNews);
 router.post('/login', loginUser);
+
+//
+
+router.post('/news', checkUser, createNews);
+router.patch('/news/:id', checkUser, updateNews);
+router.delete('/news/:id', checkUser, deleteNews);
 
 module.exports = router;

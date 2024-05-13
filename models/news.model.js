@@ -15,8 +15,7 @@ const newsSchema = mongoose.Schema({
     default: Date.now,
   },
   user: {
-    type: mongoose.Schema.Types.ObjectId,
-
+    type: mongoose.Types.ObjectId,
     ref: 'User',
   },
 });

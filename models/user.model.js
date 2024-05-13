@@ -24,7 +24,7 @@ const userSchema = mongoose.Schema({
   },
   news: [
     {
-      type: mongoose.Schema.Types.ObjectId,
+      type: mongoose.Types.ObjectId,
       ref: 'News',
     },
   ],
