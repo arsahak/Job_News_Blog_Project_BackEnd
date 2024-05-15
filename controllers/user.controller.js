@@ -141,10 +141,81 @@ const loginUser = async (req, res) => {
     success: true,
     message: 'User is logged in successfully',
     firstName: user.firstName,
-    firstName: user.lastName,
+    lastName: user.lastName,
     email: user.email,
     token: 'Bearer ' + token,
   });
+};
+
+const loginWithAuth = async (req, res) => {
+  try {
+    const user = await User.findOne({ email: req.body.email });
+    if (user) {
+      const payload = {
+        id: user._id,
+        email: user.email,
+      };
+
+      const token = jwt.sign(payload, process.env.SECRET_KEY, {
+        expiresIn: '2d',
+      });
+
+      return res.status(200).send({
+        success: true,
+        message: 'User is found and logged in successfully',
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        token: 'Bearer ' + token,
+      });
+    } else {
+      const nameParts = req.body.name.split(' ');
+      const newUser = new User({
+        firstName: nameParts[0],
+        lastName: nameParts[nameParts.length - 1],
+        email: req.body.email,
+      });
+
+      await newUser
+        .save()
+        .then((user) => {
+          const userCheck = User.findOne({ email: user.email });
+          if (!userCheck) {
+            return res.status(401).send({
+              success: false,
+              message: 'User is not found',
+            });
+          }
+
+          const payload = {
+            id: user._id,
+            email: user.email,
+          };
+
+          const token = jwt.sign(payload, process.env.SECRET_KEY, {
+            expiresIn: '2d',
+          });
+
+          return res.status(200).send({
+            success: true,
+            message: 'User is create and logged in successfully',
+            firstName: user.firstName,
+            firstName: user.lastName,
+            email: user.email,
+            token: 'Bearer ' + token,
+          });
+        })
+        .catch((error) => {
+          res.send({
+            success: false,
+            message: 'User is not created',
+            error: error,
+          });
+        });
+    }
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
 };
 
 module.exports = {
@@ -155,4 +226,5 @@ module.exports = {
   updateUser,
   deleteUser,
   loginUser,
+  loginWithAuth,
 };
