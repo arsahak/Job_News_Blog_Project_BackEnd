@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 require('./config/db');
-const userRouter = require('./routes/routes');
+const userRouter = require('./routes/routeNames');
 
 const app = express();
 
@@ -11,11 +11,7 @@ app.use(express.json());
 
 app.use('/api/users', userRouter);
 
-// api/users : GET
-// api/users/:id : GET
-// api/users/ : POST
-// api/users/:id : PATCH
-// api/users/:id : DELETE
+// Database connection
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/./views/index.html');

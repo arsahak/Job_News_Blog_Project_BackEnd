@@ -20,7 +20,7 @@ const {
 
 const checkUser = require('../middleware/checkUser');
 
-router.get('/test', getAllUsers);
+router.get('/', getAllUsers);
 router.get('/news', checkUser, getAllNews);
 router.get('/profile', checkUser, getAllProfile);
 router.get('/:id', getOneUser);
