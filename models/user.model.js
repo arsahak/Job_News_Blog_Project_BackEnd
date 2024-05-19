@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const userSchema = mongoose.Schema({
   firstName: {
@@ -22,9 +22,27 @@ const userSchema = mongoose.Schema({
   news: [
     {
       type: mongoose.Types.ObjectId,
-      ref: 'News',
+      ref: "News",
+    },
+  ],
+  category: [
+    {
+      type: mongoose.Types.ObjectId,
+      ref: "category",
+    },
+  ],
+  subCategory: [
+    {
+      type: mongoose.Types.ObjectId,
+      ref: "SubCategory",
+    },
+  ],
+  saveNews: [
+    {
+      type: mongoose.Types.ObjectId,
+      ref: "SaveNews",
     },
   ],
 });
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model("User", userSchema);
