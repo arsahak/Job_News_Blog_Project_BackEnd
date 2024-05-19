@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/user.model');
 const {
   getAllUsers,
   createUser,
@@ -21,20 +20,13 @@ const {
 
 const checkUser = require('../middleware/checkUser');
 
-router.get('/', async (req, res) => {
-  try {
-    const users = await User.find();
-    res.status(200).json(users);
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
-});
+router.get('/users', getAllUsers);
 router.get('/news', checkUser, getAllNews);
 router.get('/profile', checkUser, getAllProfile);
-router.get('/:id', getOneUser);
-router.delete('/:id', deleteUser);
-router.patch('/:id', updateUser);
-router.post('/', createUser);
+router.get('/users/:id', getOneUser);
+router.delete('/users/:id', deleteUser);
+router.patch('/users/:id', updateUser);
+router.post('/users', createUser);
 router.post('/login', loginUser);
 router.post('/loginauth', loginWithAuth);
 
