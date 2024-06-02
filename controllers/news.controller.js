@@ -1,6 +1,6 @@
-require('dotenv').config();
-const News = require('../models/news.model');
-const cloudinary = require('cloudinary').v2;
+require("dotenv").config();
+const News = require("../models/news.model");
+const cloudinary = require("cloudinary").v2;
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -9,9 +9,9 @@ cloudinary.config({
 });
 
 const getPublicIdFromUrl = (imageUrl) => {
-  const urlParts = imageUrl.split('/');
+  const urlParts = imageUrl.split("/");
   const fileName = urlParts[urlParts.length - 1];
-  const publicId = fileName.split('.')[0]; // Remove file extension
+  const publicId = fileName.split(".")[0]; // Remove file extension
   return publicId;
 };
 
@@ -42,7 +42,7 @@ const createNews = async (req, res, next) => {
     await createNews.save();
     res.status(201).send({
       success: true,
-      message: 'News is created Successfully',
+      message: "News is created Successfully",
       user: {
         id: req.id,
         email: req.email,
@@ -65,16 +65,17 @@ const updateNews = async (req, res) => {
     await news.save();
     res.status(200).send({
       success: true,
-      message: 'User is update Successfully',
+      message: "User is update Successfully",
     });
   } catch (error) {
     res.status(500).res.send({
       success: false,
-      message: 'User is not update',
+      message: "User is not update",
       error: error,
     });
   }
 };
+
 
 const deleteNews = async (req, res) => {
   try {
@@ -87,33 +88,33 @@ const deleteNews = async (req, res) => {
     const result = await cloudinary.api.delete_resources(
       [`newsblog/${publicId}`],
       {
-        type: 'upload',
-        resource_type: 'image',
-      },
+        type: "upload",
+        resource_type: "image",
+      }
     );
 
     // Check if the deletion was successful
-    if (result.deleted[`newsblog/${publicId}`] === 'deleted') {
+    if (result.deleted[`newsblog/${publicId}`] === "deleted") {
       // Delete the news from MongoDB
       await News.deleteOne({ user: req.id });
 
       res.status(200).json({
         success: true,
-        message: 'News is deleted',
+        message: "News is deleted",
         id: req.id,
       });
     } else {
       // Handle deletion failure
       res.status(500).json({
         success: false,
-        message: 'Failed to delete news',
+        message: "Failed to delete news",
         id: req.id,
       });
     }
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Error deleting news',
+      message: "Error deleting news",
       id: req.id,
       error: error.message, // Include error message for debugging
     });
