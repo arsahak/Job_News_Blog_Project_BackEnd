@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const saveNewsSchema = mongoose.Schema({
-  saveNewId: {
+  saveNewsId: {
     type: String,
   },
   createdOn: {

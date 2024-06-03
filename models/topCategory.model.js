@@ -1,13 +1,7 @@
 const mongoose = require("mongoose");
 
-const subCategorySchema = mongoose.Schema({
-  topCategory: {
-    type: String,
-  },
+const topCategorySchema = mongoose.Schema({
   category: {
-    type: String,
-  },
-  subCategory: {
     type: String,
   },
   image: {
@@ -23,4 +17,4 @@ const subCategorySchema = mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("SubCategory", subCategorySchema);
+module.exports = mongoose.model("TopCategory", topCategorySchema);

@@ -1,19 +1,25 @@
 const mongoose = require("mongoose");
 
 const categorySchema = mongoose.Schema({
-  category: {
+  topCategory: {
     type: String,
+    required: true,
   },
-  image: {
-    type: String,
-  },
+  category: [
+    {
+      title: {
+        type: String,
+        required: true,
+      },
+      image: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
   createdOn: {
     type: Date,
     default: Date.now,
-  },
-  user: {
-    type: mongoose.Types.ObjectId,
-    ref: "User",
   },
 });
 

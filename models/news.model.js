@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const newsSchema = mongoose.Schema({
   title: {
@@ -17,10 +17,13 @@ const newsSchema = mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  subCategory: {
+    type: String,
+  },
   user: {
     type: mongoose.Types.ObjectId,
-    ref: 'User',
+    ref: "User",
   },
 });
 
-module.exports = mongoose.model('News', newsSchema);
+module.exports = mongoose.model("News", newsSchema);
