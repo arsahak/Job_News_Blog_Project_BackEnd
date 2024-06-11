@@ -29,7 +29,35 @@ const saveNews = async (req, res) => {
   }
 };
 
+const deletedAllNews = async (req, res) => {
+  try {
+    // Ensure you have the correct user ID from the request
+    const userId = req.id;
+
+    // Delete all SaveNews records associated with the given user ID
+    await SaveNews.destroy({
+      where: {
+        user: userId,
+      },
+    });
+
+    res.status(200).send({
+      success: true,
+      message: "Deleted Successfully",
+      user: {
+        id: userId,
+      },
+    });
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   getAllSaveNews,
   saveNews,
+  deletedAllNews,
 };
