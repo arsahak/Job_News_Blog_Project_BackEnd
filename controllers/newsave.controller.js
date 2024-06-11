@@ -35,11 +35,7 @@ const deletedAllNews = async (req, res) => {
     const userId = req.id;
 
     // Delete all SaveNews records associated with the given user ID
-    await SaveNews.destroy({
-      where: {
-        user: userId,
-      },
-    });
+    await SaveNews.deleteMany({ userId: userId });
 
     res.status(200).send({
       success: true,

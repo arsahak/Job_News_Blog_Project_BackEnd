@@ -58,6 +58,6 @@ router.delete("/category/:id", deleteCategory);
 // news save route
 router.get("/newssave", checkUser, getAllSaveNews);
 router.post("/newssave", checkUser, saveNews);
-router.delete("/newssave/:id", checkUser, deletedAllNews);
+router.delete("/newssave", checkUser, deletedAllNews);
 
 module.exports = router;
