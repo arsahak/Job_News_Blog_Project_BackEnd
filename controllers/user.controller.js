@@ -1,6 +1,6 @@
-const User = require('../models/user.model');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const User = require("../models/user.model");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const saltRounds = 10;
 
@@ -34,7 +34,7 @@ const getOneUser = async (req, res) => {
 const createUser = async (req, res) => {
   try {
     const user = await User.findOne({ email: req.body.email });
-    if (user) return res.status(400).send('Email already exists');
+    if (user) return res.status(400).send("Email already exists");
     bcrypt.hash(req.body.password, saltRounds, async (err, hash) => {
       const newUser = new User({
         firstName: req.body.firstName,
@@ -48,7 +48,7 @@ const createUser = async (req, res) => {
         .then((user) => {
           res.send({
             success: true,
-            message: 'User is created Successfully',
+            message: "User is created Successfully",
             user: {
               id: user._id,
               email: user.email,
@@ -58,7 +58,7 @@ const createUser = async (req, res) => {
         .catch((error) => {
           res.send({
             success: false,
-            message: 'User is not created',
+            message: "User is not created",
             error: error,
           });
         });
@@ -82,7 +82,7 @@ const updateUser = async (req, res) => {
           .then((user) => {
             res.send({
               success: true,
-              message: 'User is update Successfully',
+              message: "User is update Successfully",
               user: {
                 id: user._id,
                 email: user.email,
@@ -92,7 +92,7 @@ const updateUser = async (req, res) => {
           .catch((error) => {
             res.send({
               success: false,
-              message: 'User is not update',
+              message: "User is not update",
               error: error,
             });
           });
@@ -106,50 +106,65 @@ const updateUser = async (req, res) => {
 const deleteUser = async (req, res) => {
   try {
     await User.deleteOne({ _id: req.params.id });
-    res.status(200).json({ message: 'user is deleted' });
+    res.status(200).json({ message: "user is deleted" });
   } catch (error) {
     res.status(500).send(error.message);
   }
 };
 
 const loginUser = async (req, res) => {
-  const user = await User.findOne({ email: req.body.email });
-  if (!user) {
-    return res.status(401).send({
+  try {
+    const user = await User.findOne({ email: req.body.email });
+
+    if (!user) {
+      return res.status(401).send({
+        success: false,
+        message: "Invalid email or password",
+      });
+    }
+
+    const isPasswordValid = await bcrypt.compare(
+      req.body.password,
+      user.password
+    );
+    if (!isPasswordValid) {
+      return res.status(401).send({
+        success: false,
+        message: "Invalid email or password",
+      });
+    }
+
+    const payload = {
+      id: user._id,
+      email: user.email,
+    };
+
+    const token = jwt.sign(payload, process.env.SECRET_KEY, {
+      expiresIn: "2d",
+    });
+
+    return res.status(200).send({
+      success: true,
+      message: "User is logged in successfully",
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      token: "Bearer " + token,
+    });
+  } catch (error) {
+    console.error(error); // Log the error for debugging
+    return res.status(500).send({
       success: false,
-      message: 'User is not found',
+      message: "An error occurred during login",
+      error: error.message,
     });
   }
-
-  if (!bcrypt.compareSync(req.body.password, user.password)) {
-    return res.status(401).send({
-      success: false,
-      message: 'Incorrect password',
-    });
-  }
-
-  const payload = {
-    id: user._id,
-    email: user.email,
-  };
-
-  const token = jwt.sign(payload, process.env.SECRET_KEY, {
-    expiresIn: '2d',
-  });
-
-  return res.status(200).send({
-    success: true,
-    message: 'User is logged in successfully',
-    firstName: user.firstName,
-    lastName: user.lastName,
-    email: user.email,
-    token: 'Bearer ' + token,
-  });
 };
 
 const loginWithAuth = async (req, res) => {
   try {
     const user = await User.findOne({ email: req.body.email });
+
     if (user) {
       const payload = {
         id: user._id,
@@ -157,64 +172,51 @@ const loginWithAuth = async (req, res) => {
       };
 
       const token = jwt.sign(payload, process.env.SECRET_KEY, {
-        expiresIn: '2d',
+        expiresIn: "2d",
       });
 
       return res.status(200).send({
         success: true,
-        message: 'User is found and logged in successfully',
+        message: "User is logged in successfully",
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
-        token: 'Bearer ' + token,
+        token: "Bearer " + token,
       });
     } else {
-      const nameParts = req.body.name.split(' ');
       const newUser = new User({
-        firstName: nameParts[0],
-        lastName: nameParts[nameParts.length - 1],
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
         email: req.body.email,
       });
 
-      await newUser
-        .save()
-        .then((user) => {
-          const userCheck = User.findOne({ email: user.email });
-          if (!userCheck) {
-            return res.status(401).send({
-              success: false,
-              message: 'User is not found',
-            });
-          }
+      const savedUser = await newUser.save();
 
-          const payload = {
-            id: user._id,
-            email: user.email,
-          };
+      const payload = {
+        id: savedUser._id,
+        email: savedUser.email,
+      };
 
-          const token = jwt.sign(payload, process.env.SECRET_KEY, {
-            expiresIn: '2d',
-          });
+      const token = jwt.sign(payload, process.env.SECRET_KEY, {
+        expiresIn: "2d",
+      });
 
-          return res.status(200).send({
-            success: true,
-            message: 'User is create and logged in successfully',
-            firstName: user.firstName,
-            firstName: user.lastName,
-            email: user.email,
-            token: 'Bearer ' + token,
-          });
-        })
-        .catch((error) => {
-          res.send({
-            success: false,
-            message: 'User is not created',
-            error: error,
-          });
-        });
+      return res.status(200).send({
+        success: true,
+        message: "User is logged in successfully",
+        firstName: savedUser.firstName,
+        lastName: savedUser.lastName,
+        email: savedUser.email,
+        token: "Bearer " + token,
+      });
     }
   } catch (error) {
-    res.status(500).send(error.message);
+    console.error(error); // Log the error for debugging purposes
+    res.status(500).send({
+      success: false,
+      message: "An error occurred",
+      error: error.message,
+    });
   }
 };
 
