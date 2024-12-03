@@ -11,7 +11,7 @@ app.use(express.json());
 
 app.use("/api", userRouter);
 
-// Database connection
+// Database connectio
 
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/./views/index.html");
