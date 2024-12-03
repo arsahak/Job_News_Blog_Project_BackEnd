@@ -1,6 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const { seedRouter } = require("./routers/seedRouter");
+const { userRouter } = require("./routers/userRouter");
+const { authRouter } = require("./routers/authRouter");
 require("./config/db");
 
 
@@ -10,7 +12,10 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.use("/api", seedRouter);
+
+app.use("/api", authRouter);
+app.use("/api/seed", seedRouter);
+app.use("/api", userRouter);
 
 
 app.get("/", (req, res) => {
