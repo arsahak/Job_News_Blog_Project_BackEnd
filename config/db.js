@@ -1,10 +1,9 @@
 const mongoose = require('mongoose');
-const config = require('./config');
+const { dataBaseUrl } = require('../secret');
 
-const dbURL = config.db.url;
 
 mongoose
-  .connect(dbURL)
+  .connect( dataBaseUrl)
   .then(() => {
     console.log('mongodb atlas is connected');
   })
