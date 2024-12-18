@@ -4,7 +4,7 @@ const authRouter = express.Router();
 // const runValidation = require("../validator");
 const { userLogin, userLogout, userTokenRefresh } = require("../controllers/authController");
 
-authRouter.get("/auth/login", userLogin);
+authRouter.post("/auth/login", userLogin);
 authRouter.get("/auth/logout", userLogout);
 
 authRouter.get("/refresh-token", userTokenRefresh);

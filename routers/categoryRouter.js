@@ -4,9 +4,9 @@ const { createCategories, getAllCategories, editCategory, deleteCategory } = req
 const { isLoggedIn } = require("../middleware/auth");
 
 
-categoryRouter.post("/create-categories", isLoggedIn, createCategories);
-categoryRouter.get("/categories", isLoggedIn, getAllCategories);
-categoryRouter.put("/edit-category/:id", isLoggedIn, editCategory);
-categoryRouter.delete("/delete-category/:id", isLoggedIn, deleteCategory);
+categoryRouter.post("/create-categories", createCategories);
+categoryRouter.get("/categories",  getAllCategories);
+categoryRouter.put("/edit-category/:id", editCategory);
+categoryRouter.delete("/delete-category/:id",  deleteCategory);
 
 module.exports = { categoryRouter };
