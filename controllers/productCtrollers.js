@@ -81,6 +81,13 @@ const createProduct = async (req, res, next) => {
       category,
       quantity,
       shipping,
+      laborCost,
+      shippingCost,
+      fabricAPrice,
+      fabricBPrice,
+      articleNumber,
+      size,
+      color,
     } = req.body;
 
    
@@ -93,9 +100,6 @@ const createProduct = async (req, res, next) => {
 
     // const galleryImages = req.files?.map((file) => file.path) || []; 
 
-
-    
-
     const product = new Product({
       title,
       description,
@@ -107,6 +111,13 @@ const createProduct = async (req, res, next) => {
       category,
       quantity,
       shipping,
+     laborCost,
+     shippingCost,
+     fabricAPrice,
+     fabricBPrice,
+     articleNumber,
+     size,
+     color,
     });
 
     const savedProduct = await product.save();

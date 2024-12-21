@@ -17,7 +17,6 @@ const upload = multer({
 });
 
 
-
 const uploadSingle = upload.single("image");
 
 const uploadGallery = upload.array("gallery", 10); 

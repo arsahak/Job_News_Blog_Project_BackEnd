@@ -10,7 +10,7 @@ const stripe = require("stripe")(stripeSecretKey); // Replace with your Stripe s
 // Create a new order
 const createOrder = async (req, res, next) => {
   try {
-    const { userId, products, totalAmount, paymentMethod } = req.body;
+    const { userId, products, totalAmount, paymentMethod, paymentId } = req.body;
 
     if (!userId || !products || !totalAmount || !paymentMethod) {
       throw createError(400, "All fields are required");
@@ -51,6 +51,7 @@ const createOrder = async (req, res, next) => {
       products,
       totalAmount: calculatedTotalAmount, // Save the calculated amount
       paymentMethod,
+      paymentId,
     });
 
     // Save the order

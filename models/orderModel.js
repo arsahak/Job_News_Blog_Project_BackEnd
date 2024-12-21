@@ -19,6 +19,14 @@ const orderSchema = new Schema(
           type: Number,
           required: true,
         },
+        size: {
+          type: String,
+          required: true,
+        },
+        color: {
+          type: String,
+          required: true,
+        },
         price: {
           type: Number,
           required: true,
@@ -44,6 +52,12 @@ const orderSchema = new Schema(
       enum: ["Stripe", "Other"],
       required: true,
     },
+
+    paymentId: {
+      type: String,
+      required: true,
+    },
+
     paymentTimestamp: {
       type: Date,
     },

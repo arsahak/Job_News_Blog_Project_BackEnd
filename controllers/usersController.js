@@ -382,6 +382,61 @@ const resetPassword = async (req, res, next) => {
 };
 
 
+const testUserImageUpload = async (req, res, next) => {
+  try {
+
+    const featureImage = req.file?.path; 
+
+    if (!featureImage) {
+      throw createError(400, "Feature image is required and should be under 10MB");
+    }
+
+    console.log("check image url", featureImage);
+    
+
+  return successResponse(res, {
+      statusCode: 200,
+      message: "User successfully deleted",
+      payload: { imgUrl:  featureImage },
+    });
+  } catch (error) {
+    if(error instanceof mongoose.Error.CastError){
+      throw createError(400, "Invalid Id")
+    }
+    next(error);
+  }
+};
+
+
+const testUserImageUploadMultiple = async (req, res, next) => {
+  try {
+
+  
+
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ message: "No files uploaded" });
+    }
+  
+    const fileUrls = req.files.map((file) => file.path); 
+    console.log("check url", fileUrls);
+
+    
+
+  return successResponse(res, {
+      statusCode: 200,
+      message: "User successfully deleted",
+      payload: { imgUrl:  featureImage },
+    });
+  } catch (error) {
+    if(error instanceof mongoose.Error.CastError){
+      throw createError(400, "Invalid Id")
+    }
+    next(error);
+  }
+};
+
+
+
 module.exports = {
   getAllUsers,
   getUserById,
@@ -391,5 +446,7 @@ module.exports = {
   updateUserById,
   updateUserPassword,
   forgetPassword,
-  resetPassword
+  resetPassword,
+  testUserImageUpload,
+  testUserImageUploadMultiple 
 };
